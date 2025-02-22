@@ -1,0 +1,53 @@
+name: Terraform Lint
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: ap-southeast-1
+
+jobs:
+  terraform-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+   
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+    - name: Check Terraform format
+      run: terraform fmt -recursive -check
+
+    - name: Initialize Terraform
+      run: terraform init
+       
+    - name: Validate Terraform
+      run: terraform validate
+
+    - uses: terraform-linters/setup-tflint@v3
+      with:
+        tflint_version: latest
+   
+    - name: Show version
+      run: tflint --version
+
+    - name: Initialize TFLint
+      run: tflint --init
+
+    - name: Check Terraform lint
+      run: tflint --format=compact
+   
+    - name: Run Terraform plan
+      run: terraform plan
