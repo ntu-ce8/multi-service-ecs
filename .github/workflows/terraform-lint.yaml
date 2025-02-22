@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  AWS_REGION: ap-southeast-1
-
 jobs:
   terraform-lint:
     runs-on: ubuntu-latest
@@ -22,7 +19,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+        aws-region: ${{ vars.AWS_REGION }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -50,4 +47,4 @@ jobs:
       run: tflint --format=compact
    
     - name: Run Terraform plan
-      run: terraform plan
+      run: terraform plan -out=tfplan
