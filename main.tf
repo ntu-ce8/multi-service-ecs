@@ -71,14 +71,14 @@ module "ecs_sg" {
       to_port     = 5001
       protocol    = "tcp"
       description = "Service for Flask S3"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     },
     {
       from_port   = 5002
       to_port     = 5002
       protocol    = "tcp"
       description = "Service for Flask SQS"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = "0.0.0.0/0"
     }
   ]
   egress_rules = ["all-all"]
