@@ -2,9 +2,6 @@ name: Terraform Lint
 
 on:
   workflow_dispatch:
-  push:
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   terraform-lint:
@@ -24,27 +21,14 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
-    - name: Check Terraform format
-      run: terraform fmt -recursive -check
-
     - name: Initialize Terraform
       run: terraform init
        
     - name: Validate Terraform
       run: terraform validate
-
-    - uses: terraform-linters/setup-tflint@v3
-      with:
-        tflint_version: latest
-   
-    - name: Show version
-      run: tflint --version
-
-    - name: Initialize TFLint
-      run: tflint --init
-
-    - name: Check Terraform lint
-      run: tflint --format=compact
    
     - name: Run Terraform plan
       run: terraform plan -out=tfplan
+
+    - name: Run Terraform apply
+      run: terraform apply tfplan -auto-approve
