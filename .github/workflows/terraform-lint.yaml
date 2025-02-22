@@ -1,4 +1,4 @@
-name: Terraform Lint
+name: Lint Terraform Scripts
 
 on:
   workflow_dispatch:
